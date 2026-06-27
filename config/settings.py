@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'category',
     'account',
     'store',
+    'cart',
 
 ]
 AUTH_USER_MODEL = 'account.Account'
@@ -70,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'category.context_processors.menu_links',
+                'store.context_processors.counter',
             ],
         },
     },
