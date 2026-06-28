@@ -1,9 +1,11 @@
 from django.db import models
 from django.urls import reverse
 from category.models import Category
+from django.conf import settings
 
 
 class Product(models.Model):
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='products', null=True,blank=True) 
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=500, blank=True)
@@ -21,6 +23,27 @@ class Product(models.Model):
 
     def get_url(self):
         return reverse("product_detail", args=[self.category.slug,self.slug])
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')  # bir user bir mahsulotga faqat 1 ta like
+
+    def __str__(self):
+        return f"{self.user} → {self.product.name}"
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} → {self.product.name}"
 
 CATEGORY_CHOICES = (
     ("Color", "Color"),

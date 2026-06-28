@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chiroyli shrift -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Django {{form.as_p}} ichidagi inputlarni professional holatga keltirish */
+        .django-form p { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem; font-weight: 500; font-size: 0.875rem; color: #374151; }
+        .django-form input {
+            width: 100%; padding: 0.625rem 1rem; border: 1px solid #d1d5db; border-radius: 0.75rem;
+            outline: none; transition: all 0.2s; background-color: #f9fafb; font-size: 1rem;
+        }
+        .django-form input:focus { border-color: #4f46e5; background-color: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
+        .django-form .helptext { font-size: 0.75rem; color: #6b7280; margin-top: 0.25rem; font-weight: 400; }
+        .django-form .errorlist { color: #ef4444; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; list-style: none; padding: 0; }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen px-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 w-full max-w-md">
+        <!-- Sarlavha -->
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight">Sign UP</h2>
+            <p class="text-sm text-gray-400 mt-2">Ma'lumotlarni to'ldirib, ro'yxatdan o'ting</p>
+        </div>
+
+        <!-- Forma -->
+        <form method="POST" class="django-form">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <!-- Saplash Tugmasi -->
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-indigo-100 transition duration-200 mt-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                Saqlash
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>

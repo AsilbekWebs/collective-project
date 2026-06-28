@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foydalanuvchi Profili</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f5f5f7; font-family: 'Inter', sans-serif; color: #1d1d1f; }
+        .profile-card { background: #ffffff; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); border: none; }
+        .avatar-circle { width: 100px; height: 100px; background: linear-gradient(135deg, #0071e3, #42a5f5); color: white; display: flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 600; border-radius: 50%; margin: 0 auto 15px; box-shadow: 0 4px 12px rgba(0,113,227,0.2); overflow: hidden; }
+        .info-label { font-size: 0.85rem; color: #86868b; font-weight: 500; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-value { font-size: 1.05rem; color: #1d1d1f; font-weight: 600; }
+        .info-box { background-color: #fbfbfd; border: 1px solid #d2d2d7; border-radius: 12px; padding: 12px 16px; transition: all 0.2s ease; }
+        .info-box:hover { background-color: #f5f5f7; border-color: #86868b; }
+        .btn-apple-primary { background-color: #0071e3; color: white; border-radius: 10px; font-weight: 500; padding: 10px 20px; border: none; transition: all 0.2s; }
+        .btn-apple-primary:hover { background-color: #0077ed; color: white; box-shadow: 0 4px 12px rgba(0,113,227,0.3); }
+        .btn-apple-secondary { background-color: #f5f5f7; color: #1d1d1f; border-radius: 10px; font-weight: 500; padding: 10px 20px; border: 1px solid #d2d2d7; transition: all 0.2s; }
+        .btn-apple-secondary:hover { background-color: #e8e8ed; }
+        .btn-apple-danger { background-color: #ff3b30; color: white; border-radius: 10px; font-weight: 500; padding: 10px 20px; border: none; transition: all 0.2s; }
+        .btn-apple-danger:hover { background-color: #d7261e; color: white; box-shadow: 0 4px 12px rgba(255,59,48,0.3); }
+        .status-badge { font-size: 0.8rem; padding: 6px 12px; border-radius: 20px; font-weight: 600; }
+        .modal-content { border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .modal-header { border-bottom: 1px solid #d2d2d7; padding: 22px 24px 14px; }
+        .modal-body { padding: 24px; }
+        .modal-footer { border-top: 1px solid #d2d2d7; padding: 15px 24px 24px; }
+        .form-control-apple { background-color: #fbfbfd; border: 1px solid #d2d2d7; border-radius: 10px; padding: 10px 14px; font-size: 100%; transition: all 0.2s; }
+        .form-control-apple:focus { background-color: #ffffff; border-color: #0071e3; box-shadow: 0 0 0 4px rgba(0,113,227,0.15); outline: none; }
+        .product-card { border-radius: 12px; border: 1px solid #d2d2d7; transition: all 0.2s; }
+        .product-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+
+    {% if messages %}
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-8 col-lg-6">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <!-- 1. PROFIL KARTOCHKASI -->
+            <div class="card profile-card p-4 text-center mb-4">
+                <div class="avatar-circle">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" style="width:100%; height:100%; object-fit:cover;">
+                    {% elif user.first_name %}
+                        {{ user.first_name|slice:":1"|upper }}
+                    {% else %}
+                        {{ user.username|slice:":1"|upper }}
+                    {% endif %}
+                </div>
+                <h3 class="fw-bold m-0">
+                    {% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}
+                </h3>
+                <p class="text-muted mb-3">@{{ user.username }}</p>
+
+                <div class="d-flex justify-content-center gap-2 mb-3">
+                    {% if user.is_superuser %}
+                        <span class="badge bg-dark status-badge">Super Admin</span>
+                    {% elif user.is_staff %}
+                        <span class="badge bg-primary status-badge">Staff</span>
+                    {% else %}
+                        <span class="badge bg-secondary status-badge">Foydalanuvchi</span>
+                    {% endif %}
+                    {% if user.is_active %}
+                        <span class="badge bg-success-subtle text-success status-badge">Faol</span>
+                    {% else %}
+                        <span class="badge bg-danger-subtle text-danger status-badge">Faol emas</span>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-apple-primary btn-sm px-4 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fa-solid fa-user-pen me-1"></i> Profilni tahrirlash
+                    </button>
+                    <button type="button" class="btn btn-apple-secondary btn-sm px-4 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        <i class="fa-solid fa-lock me-1"></i> Parol
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. SHAXSIY MA'LUMOTLAR -->
+            <div class="card profile-card p-4 mb-4">
+                <h5 class="fw-bold mb-4 text-start"><i class="fa-solid fa-user-shield me-2 text-primary"></i> Shaxsiy ma'lumotlar</h5>
+                <div class="row g-3 text-start">
+                    <div class="col-12">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-at text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Foydalanuvchi nomi</div>
+                                <div class="info-value">{{ user.username }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-id-card text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Ism</div>
+                                <div class="info-value">{{ user.first_name|default:"Kiritilmagan" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-id-card text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Familya</div>
+                                <div class="info-value">{{ user.last_name|default:"Kiritilmagan" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-envelope text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Elektron pochta</div>
+                                <div class="info-value text-break">{{ user.email|default:"Kiritilmagan" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-phone text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Telefon raqam</div>
+                                <div class="info-value">{{ user.phone_number|default:"Kiritilmagan" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-building text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Kompaniya</div>
+                                <div class="info-value">{{ user.user_company|default:"Kiritilmagan" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-calendar-plus text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Ro'yxatdan o'tgan sana</div>
+                                <div class="info-value">{{ user.date_joined|date:"d-F, Y, H:i" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-box d-flex align-items-center">
+                            <i class="fa-solid fa-clock text-muted me-3 fs-5"></i>
+                            <div>
+                                <div class="info-label">Oxirgi faollik</div>
+                                <div class="info-value">{{ user.last_login|date:"d-F, Y, H:i"|default:"Hali tizimga kirmagan" }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-2 border-top text-center">
+                    <a href="{% url 'logout' %}" class="btn btn-apple-danger w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Tizimdan chiqish
+                    </a>
+                </div>
+            </div>
+
+            <!-- 3. MAHSULOTLAR -->
+            <div class="card profile-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold m-0">
+                        <i class="fa-solid fa-box text-primary me-2"></i>
+                        Mening mahsulotlarim ({{ products.paginator.count }})
+                    </h5>
+                </div>
+
+                {% for product in products %}
+                <div class="card product-card mb-3 p-3">
+                    <div class="row align-items-start g-2">
+                        <div class="col-4">
+                            <img src="{{ product.image.url }}" class="img-fluid rounded" style="max-height: 110px; width: 100%; object-fit: cover;">
+                        </div>
+                        <div class="col-8">
+                            <a href="{{ product.get_url }}" class="text-decoration-none text-dark"><h6 class="fw-bold mb-1">{{ product.name }}</h6></a>
+                            <p class="text-muted small mb-2">{{ product.description|truncatewords:10 }}</p>
+                            <p class="fw-bold text-primary mb-2">${{ product.price }}</p>
+
+                            <span class="badge bg-danger mb-2">
+                                <i class="fa-solid fa-heart me-1"></i>{{ product.likes.count }} like
+                            </span>
+
+                            {% if product.comments.all %}
+                            <div class="mt-1">
+                                <small class="text-muted fw-bold d-block mb-1">Izohlar:</small>
+                                {% for comment in product.comments.all %}
+                                <div class="p-2 mb-1" style="background: #f5f5f7; border-radius: 8px;">
+                                    <small><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</small>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <small class="text-muted">Hali izoh yo'q</small>
+                            {% endif %}
+
+                            <div class="mt-2 d-flex gap-2">
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fa-solid fa-pen"></i> Tahrirlash
+                                </a>
+                                <form method="POST" action="{% url 'delete_product' product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Mahsulotni o\'chirmoqchimisiz?')">
+                                        <i class="fa-solid fa-trash"></i> O'chirish
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-4">
+                    <i class="fa-solid fa-box-open text-muted fs-1 mb-3 d-block"></i>
+                    <p class="text-muted">Hali mahsulot qo'shilmagan</p>
+                    <a href="{% url 'add_product' %}" class="btn btn-apple-primary btn-sm">
+                        <i class="fa-solid fa-plus me-1"></i> Birinchi mahsulotni qo'shing
+                    </a>
+                </div>
+                {% endfor %}
+
+                <!-- PAGINATION -->
+                {% if products.has_other_pages %}
+                <div class="d-flex justify-content-center mt-3">
+                    <nav>
+                        <ul class="pagination">
+                            {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.previous_page_number }}">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for i in products.paginator.page_range %}
+                            <li class="page-item {% if products.number == i %}active{% endif %}">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                            {% endfor %}
+                            {% if products.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ products.next_page_number }}">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- PROFILNI TAHRIRLASH MODAL -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-gear text-primary me-2"></i> Profilni tahrirlash</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'update' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small fw-bold text-muted">Ism</label>
+                            <input type="text" name="first_name" class="form-control form-control-apple" value="{{ user.first_name }}" placeholder="Ismingizni kiriting">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small fw-bold text-muted">Familiya</label>
+                            <input type="text" name="last_name" class="form-control form-control-apple" value="{{ user.last_name }}" placeholder="Familiyangizni kiriting">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Username</label>
+                            <input type="text" name="username" class="form-control form-control-apple" value="{{ user.username }}" placeholder="Username kiriting">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Elektron pochta</label>
+                            <input type="email" name="email" class="form-control form-control-apple" value="{{ user.email }}" placeholder="example@mail.com">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Telefon raqam</label>
+                            <input type="text" name="phone_number" class="form-control form-control-apple" value="{{ user.phone_number|default:'' }}" placeholder="+998YYXXXXXXX">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Kompaniya</label>
+                            <input type="text" name="user_company" class="form-control form-control-apple" value="{{ user.user_company|default:'' }}" placeholder="Kompaniya nomini kiriting">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Profil rasmi</label>
+                            <input type="file" name="avatar" class="form-control form-control-apple" accept="image/*">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-apple-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="submit" class="btn btn-apple-primary">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- PAROLNI YANGILASH MODAL -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-key text-primary me-2"></i> Parolni yangilash</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'change_password' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Eski parol</label>
+                            <input type="password" name="old_password" class="form-control form-control-apple" placeholder="Eski parolni kiriting">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Yangi parol</label>
+                            <input type="password" name="new_password" class="form-control form-control-apple" placeholder="Yangi parolni kiriting">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted">Yangi parolni tasdiqlang</label>
+                            <input type="password" name="confirm_password" class="form-control form-control-apple" placeholder="Yangi parolni qaytaring">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-apple-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="submit" class="btn btn-apple-primary">Parolni yangilash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

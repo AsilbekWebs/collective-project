@@ -1,7 +1,6 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 <section class="section-content padding-y bg">
   <div class="container">
-    <!-- ============================ COMPONENT 1 ================================= -->
     <div class="card">
       <div class="row no-gutters">
         <aside class="col-md-6">
@@ -9,15 +8,15 @@
             <div class="img-big-wrap">
               <a href="#"><img src="{{product.image.url}}" /></a>
             </div>
-            <!-- img-big-wrap.// -->
           </article>
-          <!-- gallery-wrap .end// -->
         </aside>
         <main class="col-md-6 border-left">
-          <form action="{% url 'cart_add' product.id %}" method="post">
-            {% csrf_token %}
-             <article class="content-body">
+          <article class="content-body">
             <h2 class="title">{{product.name}}</h2>
+
+            {% if product.owner %}
+              <p class="text-muted">Qo'shgan: <strong>{{ product.owner.username }}</strong></p>
+            {% endif %}
 
             <div class="mb-3">
               <var class="price h4">${{product.price}}</var>
@@ -26,83 +25,92 @@
             <p>{{product.description}}</p>
 
             <hr />
-               {% for category, query in product.variation_set.all_types.items %}
+            {% for category, query in product.variation_set.all_types.items %}
             <div class="row">
               <div class="item-option-select">
                 <h6>Choose {{category}}</h6>
                 <div class="btn-group btn-group-sm btn-group-toggle row" data-toggle="buttons">
                   {% for variation in query %}
-                      <label class="btn btn-light">
-                          <input type="radio" name="{{variation.category}}" required value="{{variation.value}}">
-                        {{ variation.value | capfirst }}
-                      </label>
+                  <label class="btn btn-light">
+                    <input type="radio" name="{{variation.category}}" required value="{{variation.value}}">
+                    {{ variation.value | capfirst }}
+                  </label>
                   {% endfor %}
                 </div>
               </div>
             </div>
-               {% endfor %}
+            {% endfor %}
 
             <hr />
-            {% if product.stock > 0 %}
 
-                <button type="submit"  class="btn btn-primary">
+            <!-- LIKE TUGMASI -->
+            <form action="{% url 'like_product' product.id %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn {% if user_liked %}btn-danger{% else %}btn-outline-danger{% endif %} mt-2">
+                <i class="fas fa-heart"></i>
+                {% if user_liked %}Like olib tashlash{% else %}Like{% endif %}
+                ({{ like_count }})
+              </button>
+            </form>
+
+            <!-- SAVATGA QO'SHISH -->
+            <form action="{% url 'cart_add' product.id %}" method="post" class="d-inline">
+              {% csrf_token %}
+              {% if product.stock > 0 %}
+                <button type="submit" class="btn btn-primary mt-2">
                   <span class="text">Add to cart</span>
                   <i class="fas fa-shopping-cart"></i>
                 </button>
+              {% else %}
+                <h5 class="text-danger mt-2">Out of Stock</h5>
+              {% endif %}
+            </form>
 
-            {% else %}
-
-              <h5 class="text-danger">Out of Stock</h5>
-
-            {% endif %}
           </article>
-          </form>
-          <!-- product-info-aside .// -->
         </main>
-        <!-- col.// -->
       </div>
-      <!-- row.// -->
     </div>
-    <!-- card.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
 
     <br />
 
+    <!-- COMMENTLAR -->
     <div class="row">
       <div class="col-md-9">
         <header class="section-heading">
-          <h3>Customer Reviews</h3>
+          <h3>Izohlar ({{ comments.count }})</h3>
         </header>
 
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'add_comment' product.id %}" method="post" class="mb-4">
+          {% csrf_token %}
+          <div class="form-group">
+            <textarea name="text" class="form-control" rows="3" placeholder="Izoh yozing..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">Yuborish</button>
+        </form>
+        {% else %}
+        <p><a href="{% url 'login' %}">Kirish</a> qilib izoh yozing.</p>
+        {% endif %}
+
+        {% for comment in comments %}
         <article class="box mb-3">
           <div class="icontext w-100">
-            <img
-              src="./images/avatars/avatar1.jpg"
-              class="img-xs icon rounded-circle"
-            />
             <div class="text">
-              <span class="date text-muted float-md-right">24.04.2020 </span>
-              <h6 class="mb-1">Mike John</h6>
+              <span class="date text-muted float-md-right">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+              <h6 class="mb-1">{{ comment.user.username }}</h6>
             </div>
           </div>
-          <!-- icontext.// -->
           <div class="mt-3">
-            <p>
-              Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing
-              elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-              aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip
-            </p>
+            <p>{{ comment.text }}</p>
           </div>
         </article>
+        {% empty %}
+        <p class="text-muted">Hali izoh yo'q.</p>
+        {% endfor %}
+
       </div>
-      <!-- col.// -->
     </div>
-    <!-- row.// -->
+
   </div>
-  <!-- container .//  -->
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
-
 {% endblock %}
-
