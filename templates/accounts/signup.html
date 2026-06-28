@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Signup</title>
+
+    <style>
+
+        body{
+            background:#f5f5f5;
+            font-family:Arial;
+        }
+
+        .container{
+            width:400px;
+            margin:80px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px gray;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin-top:10px;
+            margin-bottom:20px;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            background:#28a745;
+            color:white;
+            border:none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Create Account</h2>
+
+<form method="POST">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<button type="submit">
+
+Create Account
+
+</button>
+
+</form>
+
+<p>
+<button class="back-btn" onclick="history.back()">
+  ← Orqaga qaytish
+</button>
+<p>
+Already have account?
+
+<a href="{% url 'login' %}">
+
+Login
+
+</a>
+
+</p>
+
+</div>
+
+</body>
+
+</html>

@@ -55,13 +55,13 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_superadmin = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
     objects = MyAccountManager()
 
     def __str__(self) -> str:
-        return self.email
+        return self.username
 
     def has_perm(self, perm, obj=None):
         return self.is_admin
