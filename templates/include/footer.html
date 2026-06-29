@@ -1,22 +1,162 @@
-<!-- ========================= FOOTER ========================= -->
-<footer class="section-footer border-top">
-	<div class="container">
-		<section class="footer-bottom border-top row">
-			<div class="col-md-2">
-				<p class="text-muted"> &copy 2019 Company name </p>
-			</div>
-			<div class="col-md-8 text-md-center">
-				<span  class="px-2">info@pixsellz.io</span>
-				<span  class="px-2">+879-332-9375</span>
-				<span  class="px-2">Street name 123, Avanue abc</span>
-			</div>
-			<div class="col-md-2 text-md-right text-muted">
-				<i class="fab fa-lg fa-cc-visa"></i>
-				<i class="fab fa-lg fa-cc-paypal"></i>
-				<i class="fab fa-lg fa-cc-mastercard"></i>
-			</div>
-		</section>
-	</div>
-</footer>
-<!-- ========================= FOOTER END // ========================= -->
+{% load static %}
 
+<style>
+  .site-footer {
+    background: #0f172a;
+    color: #94a3b8;
+    font-family: 'Inter', sans-serif;
+    margin-top: 60px;
+    padding: 56px 0 0;
+  }
+  .site-footer .footer-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.4px;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .site-footer .footer-logo span { color: #2563eb; }
+  .site-footer .footer-desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #64748b;
+    max-width: 230px;
+    margin-bottom: 24px;
+  }
+  .footer-social { display: flex; gap: 10px; }
+  .footer-social a {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #1e293b;
+    background: #1e293b;
+    color: #64748b;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .footer-social a:hover { border-color: #2563eb; color: #2563eb; background: rgba(37,99,235,0.1); }
+
+  .footer-col-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 16px;
+  }
+  .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a { font-size: 14px; color: #64748b; text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: #e2e8f0; }
+
+  .footer-bottom {
+    border-top: 1px solid #1e293b;
+    margin-top: 48px;
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .footer-copy { font-size: 13px; color: #334155; }
+  .footer-contacts { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-contact-item {
+    font-size: 13px;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .footer-contact-item i { font-size: 13px; color: #334155; }
+  .footer-payments { display: flex; gap: 8px; align-items: center; }
+  .pay-chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #1e293b;
+    background: #1e293b;
+    letter-spacing: 0.3px;
+  }
+  .pay-visa  { color: #3b82f6; }
+  .pay-mc    { color: #f97316; }
+  .pay-pp    { color: #0ea5e9; }
+</style>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+
+      <!-- Brand -->
+      <div class="col-lg-4 col-md-6">
+        <a href="{% url 'home' %}" class="footer-logo">Great<span>Kart</span></a>
+        <p class="footer-desc">Zamonaviy onlayn savdo platformasi — sifatli mahsulotlar eng qulay narxlarda.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- Kompaniya -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <p class="footer-col-title">Kompaniya</p>
+        <ul class="footer-links">
+          <li><a href="#">Biz haqimizda</a></li>
+          <li><a href="#">Jamoamiz</a></li>
+          <li><a href="#">Karyera</a></li>
+          <li><a href="#">Yangiliklar</a></li>
+        </ul>
+      </div>
+
+      <!-- Xizmatlar -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <p class="footer-col-title">Xizmatlar</p>
+        <ul class="footer-links">
+          <li><a href="{% url 'store' %}">Do'kon</a></li>
+          <li><a href="#">Narxlar</a></li>
+          <li><a href="#">Yetkazib berish</a></li>
+          <li><a href="#">Qaytarish siyosati</a></li>
+        </ul>
+      </div>
+
+      <!-- Yordam -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <p class="footer-col-title">Yordam</p>
+        <ul class="footer-links">
+          <li><a href="#">Aloqa</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Maxfiylik</a></li>
+          <li><a href="#">Shartlar</a></li>
+        </ul>
+      </div>
+
+      <!-- Aloqa -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <p class="footer-col-title">Aloqa</p>
+        <ul class="footer-links">
+          <li><a href="mailto:info@greatkart.com"><i class="fa fa-envelope me-2" style="font-size:12px"></i>info@greatkart.com</a></li>
+          <li><a href="tel:+87933329375"><i class="fa fa-phone me-2" style="font-size:12px"></i>+879-332-9375</a></li>
+          <li style="color:#475569;font-size:14px"><i class="fa fa-map-marker-alt me-2" style="font-size:12px"></i>Street 123, Avenue abc</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2025 GreatKart. Barcha huquqlar himoyalangan.</p>
+      <div class="footer-payments">
+        <span class="pay-chip pay-visa">VISA</span>
+        <span class="pay-chip pay-mc">MC</span>
+        <span class="pay-chip pay-pp">PayPal</span>
+      </div>
+    </div>
+  </div>
+</footer>

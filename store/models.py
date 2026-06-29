@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 class Product(models.Model):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='products', null=True,blank=True) 
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='products', null=True,blank=True)
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(max_length=500, blank=True)
@@ -30,7 +30,7 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'product')  # bir user bir mahsulotga faqat 1 ta like
+        unique_together = ('user', 'product')
 
     def __str__(self):
         return f"{self.user} → {self.product.name}"

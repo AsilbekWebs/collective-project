@@ -22,7 +22,6 @@ class UserForm(forms.ModelForm):
 
 
 
-from django.contrib.auth import authenticate
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=20)

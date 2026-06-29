@@ -1,20 +1,141 @@
-{% extends "base.html" %} {% load static %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card p-4" style="border-radius: 20px; border: none; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
-                <h3 class="fw-bold mb-4">Mahsulot qo'shish</h3>
+<style>
+  .form-wrap { padding: 36px 0 60px; }
+  .form-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .form-card h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+  }
+  .form-card .subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
+  }
 
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Qo'shish</button>
-                    <a href="{% url 'profile' %}" class="btn btn-outline-secondary w-100 mt-2">Bekor qilish</a>
-                </form>
-            </div>
-        </div>
+  .form-card label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    display: block;
+    margin-bottom: 7px;
+  }
+  .form-card input[type="text"],
+  .form-card input[type="number"],
+  .form-card input[type="email"],
+  .form-card textarea,
+  .form-card select {
+    width: 100%;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #0f172a;
+    background: #f8fafc;
+    transition: all 0.2s;
+    outline: none;
+    font-family: inherit;
+    margin-bottom: 18px;
+  }
+  .form-card input:focus,
+  .form-card textarea:focus,
+  .form-card select:focus {
+    border-color: #2563eb;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .form-card textarea { min-height: 110px; resize: vertical; }
+  .form-card input[type="file"] {
+    border: 2px dashed #e2e8f0;
+    border-radius: 10px;
+    padding: 18px;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 18px;
+    transition: border-color 0.2s;
+  }
+  .form-card input[type="file"]:hover { border-color: #2563eb; }
+
+  /* p from form.as_p */
+  .form-card form > p { margin-bottom: 0; }
+  .form-card form > p label { margin-bottom: 7px; }
+
+  .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+  .btn-submit {
+    flex: 1;
+    padding: 12px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-submit:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+  }
+  .btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #374151;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .btn-cancel:hover { background: #f1f5f9; border-color: #cbd5e1; color: #0f172a; }
+</style>
+
+<div class="container form-wrap">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <button onclick="history.back()" class="back-btn">
+      <i class="fa fa-arrow-left"></i> Orqaga
+    </button>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+      <div class="form-card">
+        <h2><i class="fa fa-plus-circle me-2 text-primary" style="font-size:20px"></i>Mahsulot qo'shish</h2>
+        <p class="subtitle">Yangi mahsulot ma'lumotlarini kiriting</p>
+
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">
+              <i class="fa fa-check me-2"></i>Qo'shish
+            </button>
+            <a href="{% url 'profile' %}" class="btn-cancel">
+              <i class="fa fa-times me-2"></i>Bekor qilish
+            </a>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
-
 {% endblock %}
