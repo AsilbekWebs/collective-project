@@ -1,7 +1,13 @@
 <form method="POST">
-    {%csrf_token%}
-    {{form.as_p}}<br>
-    <button type="submit">Login</button>
-
-
+    {% csrf_token %}
+    {{ form.username }}
+    {{ form.password }}
+    <button type="submit">Kirish</button>
 </form>
+{% if messages %}
+    {% for message in messages %}
+        <div style="color: red; margin-bottom: 15px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}

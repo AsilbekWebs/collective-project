@@ -1,10 +1,7 @@
 from django.shortcuts import render, redirect
-<<<<<<< HEAD
 from django.views import View
-from .models import Account
-from .forms import UserForm, LoginForm,  UserUpdateForm
-from django.contrib.auth import authenticate, login, logout
-from django.core.exceptions import ValidationError
+from .forms import UserUpdateForm
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from store.forms import ProductForm
@@ -18,45 +15,6 @@ def home(request):
     return render(request, 'home.html')
 
 
-class SignUpView(View):
-    def get(self, request):
-        form = UserForm()
-        return render(request, 'signup.html', {'form': form})
-
-    def post(self, request):
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data.get('password'))
-            user.is_active = True
-            user.save()
-            login(request, user)
-            return redirect('profile')
-        return render(request, 'signup.html', {'form': form})
-
-
-class LoginView(View):
-    def get(self, request):
-        form = LoginForm()
-        return render(request, "login.html", {'form': form})
-
-    def post(self, request):
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get("password")
-
-
-            user = authenticate(username=username, password=password)
-
-            if not user:
-                raise ValidationError("email yoki parol xato")
-
-            login(request, user)
-            return redirect('home')
-
-        return render(request, 'login.html', {'form': form})
-
 
 @login_required()
 def logout_view(request):
@@ -68,7 +26,7 @@ class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
         products_list = Product.objects.filter(owner=user)
-        paginator = Paginator(products_list, 5)  # sahifada 5 ta mahsulot
+        paginator = Paginator(products_list, 5)
         page_num = request.GET.get('page')
         products = paginator.get_page(page_num)
         return render(request, 'profile.html', {'user': user, 'products': products})
@@ -94,7 +52,7 @@ class ChangePasswordView(LoginRequiredMixin, View):
 
         user.set_password(new_password)
         user.save()
-        update_session_auth_hash(request, user)  # parol o'zgargandan keyin chiqarib yubormaydi
+        update_session_auth_hash(request, user)
         messages.success(request, "Parol muvaffaqiyatli yangilandi!")
         return redirect('profile')
 
@@ -130,8 +88,8 @@ class AddProductView(LoginRequiredMixin, View):
             product.save()
             return redirect('profile')
         return render(request, 'add_product.html', {'form': form})
-=======
-from django.contrib.auth import login
+
+
 from django.contrib.auth.views import LoginView
 from .forms import SignupForm
 
@@ -162,4 +120,3 @@ def signup(request):
         form = SignupForm()
 
     return render(request, 'accounts/signup.html', {'form': form})
->>>>>>> 0830305dc5e2f4f97955ec98c19f2f2cdf9850d2
